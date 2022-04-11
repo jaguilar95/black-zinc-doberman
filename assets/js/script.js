@@ -1,7 +1,30 @@
+var stage = document.querySelector("#stage");
+var startUpEl = document.createElement("div");
+
 var startUp = function () {
-  var startUpEL = document.createElement("div");
-  var startUpTitleEL = document.create;
+  stage.appendChild(startUpEl);
+  startUpEl.setAttribute("id", "start-up");
+
+  var startUpTitleEL = document.createElement("h1");
+  startUpTitleEL.textContent = "Coding Quiz Challenge!";
+  startUpEl.appendChild(startUpTitleEL);
+
+  var startUpTextEl = document.createElement("p");
+  startUpTextEl.textContent =
+    "Try to answer the following coding-related questions within one minute. Any incorrect answers will lower your time and final score by ten seconds. Good luck!";
+  startUpEl.appendChild(startUpTextEl);
+
+  var startButtonEL = document.createElement("button");
+  startButtonEL.textContent = "Start Quiz!";
+  startButtonEL.addEventListener("click", startQuiz);
+  startUpEl.appendChild(startButtonEL);
 };
+
+var startQuiz = function () {
+  startUpEl.remove();
+};
+
+startUp();
 
 /*
 
