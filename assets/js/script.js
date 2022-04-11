@@ -1,20 +1,30 @@
 var stage = document.querySelector("#stage");
 var startUpEl = document.createElement("div");
 var questionEl = document.createElement("div");
+var timerEl = document.querySelector("#timer-time");
+var quizTime = 60;
 var questionsArr = [
   {
     question: "What is my favorite color?",
     alpha: "green",
+    aStatus: "correct",
     beta: "blue",
+    bStatus: "incorrect",
     gamma: "yellow",
+    gStatus: "incorrect",
     delta: "black",
+    dStatus: "incorrect",
   },
   {
     question: "What is my favorite food?",
     alpha: "tacos",
+    aStatus: "correct",
     beta: "pizza",
+    bStatus: "incorrect",
     gamma: "ramen",
+    gStatus: "incorrect",
     delta: "chicken wings",
+    dStatus: "incorrect",
   },
 ];
 
@@ -40,6 +50,7 @@ var startUp = function () {
 var startQuiz = function () {
   startUpEl.remove();
   loadQuestion();
+  setInterval(startTimer, 1000);
 };
 
 var loadQuestion = function () {
@@ -64,10 +75,24 @@ var loadQuestion = function () {
   answerGammaEl.textContent = questionsArr[0].gamma;
   answerDeltaEl.textContent = questionsArr[0].delta;
 
+  answerAlphaEl.setAttribute("data-status", questionsArr[0].aStatus);
+  answerBetaEl.setAttribute("data-status", questionsArr[0].bStatus);
+  answerGammaEl.setAttribute("data-status", questionsArr[0].gStatus);
+  answerDeltaEl.setAttribute("data-status", questionsArr[0].dStatus);
+
   questionAnswersEl.appendChild(answerAlphaEl);
   questionAnswersEl.appendChild(answerBetaEl);
   questionAnswersEl.appendChild(answerGammaEl);
   questionAnswersEl.appendChild(answerDeltaEl);
+};
+
+var startTimer = function () {
+  if (quizTime > 0) {
+    quizTime -= 1;
+    timerEl.innerHTML = "Time Left: " + quizTime;
+  } else {
+    quizTime = 0;
+  }
 };
 
 startUp();
