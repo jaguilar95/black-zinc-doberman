@@ -51,39 +51,49 @@ var startQuiz = function () {
   startUpEl.remove();
   loadQuestion();
   setInterval(startTimer, 1000);
+  questionEl.addEventListener("click", answerHandler);
 };
 
 var loadQuestion = function () {
-  stage.appendChild(questionEl);
-  questionEl.setAttribute("id", "question-container");
+  for (var i = 0; i < questionsArr.length; i++) {
+    stage.appendChild(questionEl);
+    questionEl.setAttribute("id", "question-container");
 
-  var questionTitleEl = document.createElement("h3");
-  questionTitleEl.textContent = questionsArr[0].question;
-  questionEl.appendChild(questionTitleEl);
+    var questionTitleEl = document.createElement("h3");
+    questionTitleEl.textContent = questionsArr[i].question;
+    questionEl.appendChild(questionTitleEl);
 
-  var questionAnswersEl = document.createElement("ul");
-  questionEl.appendChild(questionAnswersEl);
+    var questionAnswersEl = document.createElement("ul");
+    questionEl.appendChild(questionAnswersEl);
 
-  // answers creation and addition
-  var answerAlphaEl = document.createElement("li");
-  var answerBetaEl = document.createElement("li");
-  var answerGammaEl = document.createElement("li");
-  var answerDeltaEl = document.createElement("li");
+    // answers creation and addition
+    var answerAlphaEl = document.createElement("li");
+    var answerBetaEl = document.createElement("li");
+    var answerGammaEl = document.createElement("li");
+    var answerDeltaEl = document.createElement("li");
 
-  answerAlphaEl.textContent = questionsArr[0].alpha;
-  answerBetaEl.textContent = questionsArr[0].beta;
-  answerGammaEl.textContent = questionsArr[0].gamma;
-  answerDeltaEl.textContent = questionsArr[0].delta;
+    answerAlphaEl.textContent = questionsArr[i].alpha;
+    answerBetaEl.textContent = questionsArr[i].beta;
+    answerGammaEl.textContent = questionsArr[i].gamma;
+    answerDeltaEl.textContent = questionsArr[i].delta;
 
-  answerAlphaEl.setAttribute("data-status", questionsArr[0].aStatus);
-  answerBetaEl.setAttribute("data-status", questionsArr[0].bStatus);
-  answerGammaEl.setAttribute("data-status", questionsArr[0].gStatus);
-  answerDeltaEl.setAttribute("data-status", questionsArr[0].dStatus);
+    answerAlphaEl.className = "answer";
+    answerBetaEl.className = "answer";
+    answerGammaEl.className = "answer";
+    answerDeltaEl.className = "answer";
 
-  questionAnswersEl.appendChild(answerAlphaEl);
-  questionAnswersEl.appendChild(answerBetaEl);
-  questionAnswersEl.appendChild(answerGammaEl);
-  questionAnswersEl.appendChild(answerDeltaEl);
+    answerAlphaEl.setAttribute("data-status", questionsArr[i].aStatus);
+    answerBetaEl.setAttribute("data-status", questionsArr[i].bStatus);
+    answerGammaEl.setAttribute("data-status", questionsArr[i].gStatus);
+    answerDeltaEl.setAttribute("data-status", questionsArr[i].dStatus);
+
+    questionAnswersEl.appendChild(answerAlphaEl);
+    questionAnswersEl.appendChild(answerBetaEl);
+    questionAnswersEl.appendChild(answerGammaEl);
+    questionAnswersEl.appendChild(answerDeltaEl);
+
+    break;
+  }
 };
 
 var startTimer = function () {
@@ -92,6 +102,26 @@ var startTimer = function () {
     timerEl.innerHTML = "Time Left: " + quizTime;
   } else {
     quizTime = 0;
+  }
+};
+
+var answerHandler = function (event) {
+  // get target element from event
+  var targetEl = event.target;
+
+  // an answer element was clicked
+  if (
+    targetEl.matches(".answer") &&
+    targetEl.getAttribute("data-status") === "correct"
+  ) {
+    console.log("This is the correct answer");
+  }
+  // else if it incorrect
+  else if (
+    targetEl.matches(".answer") &&
+    targetEl.getAttribute("data-status") === "incorrect"
+  ) {
+    console.log("This is the incorrect answer");
   }
 };
 
