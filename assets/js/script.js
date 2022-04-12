@@ -1,8 +1,24 @@
+// main stage element declaration
 var stage = document.querySelector("#stage");
+
+// start up element declaration
 var startUpEl = document.createElement("div");
+
+// questions elements declaration
 var questionEl = document.createElement("div");
+var questionTitleEl = document.createElement("h3");
+var questionAnswersEl = document.createElement("ul");
+var answerAlphaEl = document.createElement("li");
+var answerBetaEl = document.createElement("li");
+var answerGammaEl = document.createElement("li");
+var answerDeltaEl = document.createElement("li");
+var questionResultEl = document.createElement("div");
+
+// timer declarations
 var timerEl = document.querySelector("#timer-time");
 var quizTime = 60;
+
+// questions Object array declaration
 var questionsArr = [
   {
     question: "What is my favorite color?",
@@ -48,7 +64,9 @@ var startUp = function () {
 };
 
 var startQuiz = function () {
+  // remove start up element
   startUpEl.remove();
+
   loadQuestion();
   setInterval(startTimer, 1000);
   questionEl.addEventListener("click", answerHandler);
@@ -56,22 +74,18 @@ var startQuiz = function () {
 
 var loadQuestion = function () {
   for (var i = 0; i < questionsArr.length; i++) {
+    // append question container
     stage.appendChild(questionEl);
     questionEl.setAttribute("id", "question-container");
 
-    var questionTitleEl = document.createElement("h3");
+    // assign question and append question h3 element
     questionTitleEl.textContent = questionsArr[i].question;
     questionEl.appendChild(questionTitleEl);
 
-    var questionAnswersEl = document.createElement("ul");
+    // append ul element
     questionEl.appendChild(questionAnswersEl);
 
-    // answers creation and addition
-    var answerAlphaEl = document.createElement("li");
-    var answerBetaEl = document.createElement("li");
-    var answerGammaEl = document.createElement("li");
-    var answerDeltaEl = document.createElement("li");
-
+    // enter answers and append li elements
     answerAlphaEl.textContent = questionsArr[i].alpha;
     answerBetaEl.textContent = questionsArr[i].beta;
     answerGammaEl.textContent = questionsArr[i].gamma;
@@ -91,6 +105,11 @@ var loadQuestion = function () {
     questionAnswersEl.appendChild(answerBetaEl);
     questionAnswersEl.appendChild(answerGammaEl);
     questionAnswersEl.appendChild(answerDeltaEl);
+
+    // append answer result element
+
+    questionResultEl.setAttribute("id", "question-result");
+    questionEl.appendChild(questionResultEl);
 
     break;
   }
@@ -114,14 +133,23 @@ var answerHandler = function (event) {
     targetEl.matches(".answer") &&
     targetEl.getAttribute("data-status") === "correct"
   ) {
-    console.log("This is the correct answer");
+    // debugger;
+    questionResultEl.textContent = "Correct!";
+    setTimeout(function () {
+      questionEl.remove();
+    }, 2000);
+    return;
   }
   // else if it incorrect
   else if (
     targetEl.matches(".answer") &&
     targetEl.getAttribute("data-status") === "incorrect"
   ) {
-    console.log("This is the incorrect answer");
+    questionResultEl.textContent = "Incorrect!";
+    setTimeout(function () {
+      questionEl.remove();
+    }, 2000);
+    return;
   }
 };
 
