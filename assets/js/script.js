@@ -13,6 +13,11 @@ var answerBetaEl = document.createElement("li");
 var answerGammaEl = document.createElement("li");
 var answerDeltaEl = document.createElement("li");
 var questionResultEl = document.createElement("div");
+var questionI = 0;
+
+// end quiz elements declaration
+var endQuizEl = document.createElement("div");
+let quizTimeInterval;
 
 // timer declarations
 var timerEl = document.querySelector("#timer-time");
@@ -68,38 +73,39 @@ var startQuiz = function () {
   startUpEl.remove();
 
   loadQuestion();
-  setInterval(startTimer, 1000);
-  questionEl.addEventListener("click", answerHandler);
+  if (!quizTimeInterval) {
+    quizTimeInterval = setInterval(startTimer, 1000);
+  }
 };
 
 var loadQuestion = function () {
-  for (var i = 0; i < questionsArr.length; i++) {
+  if (questionI < questionsArr.length) {
     // append question container
     stage.appendChild(questionEl);
     questionEl.setAttribute("id", "question-container");
 
     // assign question and append question h3 element
-    questionTitleEl.textContent = questionsArr[i].question;
+    questionTitleEl.textContent = questionsArr[questionI].question;
     questionEl.appendChild(questionTitleEl);
 
     // append ul element
     questionEl.appendChild(questionAnswersEl);
 
     // enter answers and append li elements
-    answerAlphaEl.textContent = questionsArr[i].alpha;
-    answerBetaEl.textContent = questionsArr[i].beta;
-    answerGammaEl.textContent = questionsArr[i].gamma;
-    answerDeltaEl.textContent = questionsArr[i].delta;
+    answerAlphaEl.textContent = questionsArr[questionI].alpha;
+    answerBetaEl.textContent = questionsArr[questionI].beta;
+    answerGammaEl.textContent = questionsArr[questionI].gamma;
+    answerDeltaEl.textContent = questionsArr[questionI].delta;
 
     answerAlphaEl.className = "answer";
     answerBetaEl.className = "answer";
     answerGammaEl.className = "answer";
     answerDeltaEl.className = "answer";
 
-    answerAlphaEl.setAttribute("data-status", questionsArr[i].aStatus);
-    answerBetaEl.setAttribute("data-status", questionsArr[i].bStatus);
-    answerGammaEl.setAttribute("data-status", questionsArr[i].gStatus);
-    answerDeltaEl.setAttribute("data-status", questionsArr[i].dStatus);
+    answerAlphaEl.setAttribute("data-status", questionsArr[questionI].aStatus);
+    answerBetaEl.setAttribute("data-status", questionsArr[questionI].bStatus);
+    answerGammaEl.setAttribute("data-status", questionsArr[questionI].gStatus);
+    answerDeltaEl.setAttribute("data-status", questionsArr[questionI].dStatus);
 
     questionAnswersEl.appendChild(answerAlphaEl);
     questionAnswersEl.appendChild(answerBetaEl);
@@ -109,9 +115,12 @@ var loadQuestion = function () {
     // append answer result element
 
     questionResultEl.setAttribute("id", "question-result");
+    questionResultEl.textContent = "";
     questionEl.appendChild(questionResultEl);
 
-    break;
+    questionEl.addEventListener("click", answerHandler);
+  } else {
+    endQuiz();
   }
 };
 
@@ -128,16 +137,20 @@ var answerHandler = function (event) {
   // get target element from event
   var targetEl = event.target;
 
+  // move to next question
+  questionI++;
+
   // an answer element was clicked
   if (
     targetEl.matches(".answer") &&
     targetEl.getAttribute("data-status") === "correct"
   ) {
-    // debugger;
+    // show result and load next question
     questionResultEl.textContent = "Correct!";
     setTimeout(function () {
-      questionEl.remove();
+      loadQuestion();
     }, 2000);
+
     return;
   }
   // else if it incorrect
@@ -145,12 +158,22 @@ var answerHandler = function (event) {
     targetEl.matches(".answer") &&
     targetEl.getAttribute("data-status") === "incorrect"
   ) {
+    // show result, subtract 20 seconds, and load next question
     questionResultEl.textContent = "Incorrect!";
+    quizTime -= 10;
     setTimeout(function () {
-      questionEl.remove();
+      loadQuestion();
     }, 2000);
     return;
   }
+};
+
+var endQuiz = function () {
+  // delete question div and call endQuiz element
+  questionEl.remove();
+  clearInterval(quizTimeInterval);
+  endQuizEl.textContent = "This is the end of the quiz";
+  stage.appendChild(endQuizEl);
 };
 
 startUp();
