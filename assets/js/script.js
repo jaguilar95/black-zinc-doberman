@@ -1,10 +1,13 @@
 // main stage element declaration
 var stage = document.querySelector("#stage");
 
-// start up element declaration
+// start up element declarations
 var startUpEl = document.createElement("div");
+var startUpTitleEl = document.createElement("h1");
+var startUpTextEl = document.createElement("p");
+var startButtonEl = document.createElement("button");
 
-// questions elements declaration
+// questions elements declarations
 var questionEl = document.createElement("div");
 var questionTitleEl = document.createElement("h3");
 var questionAnswersEl = document.createElement("ul");
@@ -15,8 +18,13 @@ var answerDeltaEl = document.createElement("li");
 var questionResultEl = document.createElement("div");
 var questionI = 0;
 
-// end quiz elements declaration
+// end quiz elements declarations
 var endQuizEl = document.createElement("div");
+var endQuizTitleEl = document.createElement("h1");
+var endQuizTextEl = document.createElement("p");
+var submitFormEl = document.createElement("form");
+var submitInputEl = document.createElement("input");
+var submitButtonEl = document.createElement("button");
 let quizTimeInterval;
 
 // timer declarations
@@ -53,16 +61,13 @@ var startUp = function () {
   stage.appendChild(startUpEl);
   startUpEl.setAttribute("id", "start-up");
 
-  var startUpTitleEl = document.createElement("h1");
   startUpTitleEl.textContent = "Coding Quiz Challenge!";
   startUpEl.appendChild(startUpTitleEl);
 
-  var startUpTextEl = document.createElement("p");
   startUpTextEl.textContent =
     "Try to answer the following coding-related questions within one minute. Any incorrect answers will lower your time and final score by ten seconds. Good luck!";
   startUpEl.appendChild(startUpTextEl);
 
-  var startButtonEl = document.createElement("button");
   startButtonEl.textContent = "Start Quiz!";
   startButtonEl.addEventListener("click", startQuiz);
   startUpEl.appendChild(startButtonEl);
@@ -149,7 +154,7 @@ var answerHandler = function (event) {
     questionResultEl.textContent = "Correct!";
     setTimeout(function () {
       loadQuestion();
-    }, 2000);
+    }, 1000);
 
     return;
   }
@@ -169,11 +174,30 @@ var answerHandler = function (event) {
 };
 
 var endQuiz = function () {
-  // delete question div and call endQuiz element
+  // delete question div and call endQuiz elements
   questionEl.remove();
   clearInterval(quizTimeInterval);
-  endQuizEl.textContent = "This is the end of the quiz";
   stage.appendChild(endQuizEl);
+
+  endQuizTitleEl.textContent = "Finish!";
+  endQuizEl.appendChild(endQuizTitleEl);
+
+  endQuizEl.appendChild(submitFormEl);
+  submitFormEl.appendChild(submitInputEl);
+  submitFormEl.appendChild(submitButtonEl);
+
+  submitInputEl.setAttribute("type", "text");
+  submitInputEl.setAttribute("name", "initials");
+  submitInputEl.setAttribute("placeholder", "Enter Initials");
+  submitInputEl.setAttribute("maxlength", "4");
+
+  submitButtonEl.innerHTML = "Submit";
+
+  endQuizTextEl.textContent =
+    "Your final score is " +
+    quizTime +
+    ". Enter your initials below and submit your final score to the leader board!";
+  endQuizEl.appendChild(endQuizTextEl);
 };
 
 startUp();
