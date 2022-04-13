@@ -182,6 +182,12 @@ var endQuiz = function () {
   endQuizTitleEl.textContent = "Finish!";
   endQuizEl.appendChild(endQuizTitleEl);
 
+  endQuizTextEl.textContent =
+    "Your final score is " +
+    quizTime +
+    ". Enter your initials below and submit your final score to the leader board!";
+  endQuizEl.appendChild(endQuizTextEl);
+
   endQuizEl.appendChild(submitFormEl);
   submitFormEl.appendChild(submitInputEl);
   submitFormEl.appendChild(submitButtonEl);
@@ -192,12 +198,6 @@ var endQuiz = function () {
   submitInputEl.setAttribute("maxlength", "4");
 
   submitButtonEl.innerHTML = "Submit";
-
-  endQuizTextEl.textContent =
-    "Your final score is " +
-    quizTime +
-    ". Enter your initials below and submit your final score to the leader board!";
-  endQuizEl.appendChild(endQuizTextEl);
 };
 
 startUp();
