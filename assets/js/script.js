@@ -7,7 +7,7 @@ var startUpTitleEl = document.createElement("h1");
 var startUpTextEl = document.createElement("p");
 var startButtonEl = document.createElement("button");
 
-// questions elements declarations
+// questions element declarations
 var questionEl = document.createElement("div");
 var questionTitleEl = document.createElement("h3");
 var questionAnswersEl = document.createElement("ul");
@@ -18,7 +18,7 @@ var answerDeltaEl = document.createElement("li");
 var questionResultEl = document.createElement("div");
 var questionI = 0;
 
-// end quiz elements declarations
+// end quiz element declarations
 var endQuizEl = document.createElement("div");
 var endQuizTitleEl = document.createElement("h1");
 var endQuizTextEl = document.createElement("p");
@@ -26,6 +26,14 @@ var submitFormEl = document.createElement("form");
 var submitInputEl = document.createElement("input");
 var submitButtonEl = document.createElement("button");
 let quizTimeInterval;
+
+// quiz scores element declarations
+var quizScoresEl = document.createElement("div");
+var quizScoresTitleEl = document.createElement("h1");
+var quizScoresListEl = document.createElement("ol");
+var quizScoresFormEl = document.createElement("form");
+var quizScoresStartButtonEl = document.createElement("button");
+var quizScoresClearButtonEl = document.createElement("button");
 
 // timer declarations
 var timerEl = document.querySelector("#timer-time");
@@ -175,7 +183,7 @@ var answerHandler = function (event) {
     quizTime -= 10;
     setTimeout(function () {
       loadQuestion();
-    }, 2000);
+    }, 1000);
     return;
   }
 };
@@ -212,6 +220,16 @@ var saveScore = function () {
   localStorage.setItem("scoresArr", JSON.stringify(scoresArr));
 };
 
+var loadScores = function () {
+  var savedScores = localStorage.getItem("scoresArr");
+
+  if (!savedScores) {
+    return false;
+  }
+
+  scoresArr = JSON.parse(savedScores);
+};
+
 var scoreSubmitHandler = function (event) {
   event.preventDefault();
 
@@ -231,6 +249,11 @@ var scoreSubmitHandler = function (event) {
 
     scoresArr.push(scoreDataObj);
 
+    // keeping only the last five attempts
+    if (scoresArr.length > 5) {
+      scoresArr.shift();
+    }
+
     saveScore();
     quizScores();
   }
@@ -239,8 +262,37 @@ var scoreSubmitHandler = function (event) {
 var quizScores = function () {
   // remove endQuiz element
   endQuizEl.remove();
+
+  // load quiz score elements
+  stage.appendChild(quizScoresEl);
+  quizScoresEl.appendChild(quizScoresTitleEl);
+  quizScoresEl.appendChild(quizScoresListEl);
+  quizScoresEl.appendChild(quizScoresFormEl);
+  quizScoresEl.appendChild(quizScoresStartButtonEl);
+  quizScoresEl.appendChild(quizScoresClearButtonEl);
+
+  quizScoresTitleEl.textContent = "Recent Scores";
+  quizScoresStartButtonEl.innerHTML = "Start Again";
+  quizScoresClearButtonEl.innerHTML = "Clear Scores";
+
+  // adding recent scores
+  (function () {
+    // get scores from localStorage
+    var savedScores = localStorage.getItem("scoresArr");
+
+    savedScores = JSON.parse(savedScores);
+
+    // add all the tasks to the ol
+    for (i = 0; i < scoresArr.length; i++) {
+      var quizScoreListItemEl = document.createElement("li");
+      quizScoreListItemEl.textContent =
+        savedScores[i].initials + " - " + savedScores[i].score;
+      quizScoresFormEl.appendChild(quizScoreListItemEl);
+    }
+  })();
 };
 
+loadScores();
 startUp();
 
 /*
