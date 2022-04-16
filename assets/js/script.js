@@ -57,7 +57,14 @@ var questionsArr = [
   },
 ];
 
+var scoresArr = [];
+
 var startUp = function () {
+  // reset timer
+  var quizTime = 60;
+  timerEl.innerHTML = "Time Left: " + quizTime;
+
+  // add start up elements
   stage.appendChild(startUpEl);
   startUpEl.setAttribute("id", "start-up");
 
@@ -131,8 +138,8 @@ var loadQuestion = function () {
 
 var startTimer = function () {
   if (quizTime > 0) {
-    quizTime -= 1;
     timerEl.innerHTML = "Time Left: " + quizTime;
+    quizTime -= 1;
   } else {
     quizTime = 0;
   }
@@ -198,6 +205,40 @@ var endQuiz = function () {
   submitInputEl.setAttribute("maxlength", "4");
 
   submitButtonEl.innerHTML = "Submit";
+  submitFormEl.addEventListener("submit", scoreSubmitHandler);
+};
+
+var saveScore = function () {
+  localStorage.setItem("scoresArr", JSON.stringify(scoresArr));
+};
+
+var scoreSubmitHandler = function (event) {
+  event.preventDefault();
+
+  var initialsInput = document.querySelector("input[name='initials']").value;
+  // check if input values are empty strings
+  if (!initialsInput) {
+    alert("Please enter your initials!");
+    return false;
+  }
+
+  // else package it as an object
+  else {
+    var scoreDataObj = {
+      initials: initialsInput,
+      score: quizTime,
+    };
+
+    scoresArr.push(scoreDataObj);
+
+    saveScore();
+    quizScores();
+  }
+};
+
+var quizScores = function () {
+  // remove endQuiz element
+  endQuizEl.remove();
 };
 
 startUp();
