@@ -68,9 +68,17 @@ var questionsArr = [
 var scoresArr = [];
 
 var startUp = function () {
-  // reset timer
-  var quizTime = 60;
+  // remove quiz scores elements if there
+  quizScoresEl.remove();
+
+  // reset timer and question iterator
+  quizTime = 60;
   timerEl.innerHTML = "Time Left: " + quizTime;
+  quizTimeInterval = false;
+  questionI = 0;
+
+  // load question
+  loadScores();
 
   // add start up elements
   stage.appendChild(startUpEl);
@@ -260,8 +268,9 @@ var scoreSubmitHandler = function (event) {
 };
 
 var quizScores = function () {
-  // remove endQuiz element
+  // remove endQuiz element and reset initials form
   endQuizEl.remove();
+  submitFormEl.reset();
 
   // load quiz score elements
   stage.appendChild(quizScoresEl);
@@ -275,24 +284,43 @@ var quizScores = function () {
   quizScoresStartButtonEl.innerHTML = "Start Again";
   quizScoresClearButtonEl.innerHTML = "Clear Scores";
 
-  // adding recent scores
-  (function () {
-    // get scores from localStorage
-    var savedScores = localStorage.getItem("scoresArr");
+  // adding recent scores as list items
+  addScoreList();
 
-    savedScores = JSON.parse(savedScores);
-
-    // add all the tasks to the ol
-    for (i = 0; i < scoresArr.length; i++) {
-      var quizScoreListItemEl = document.createElement("li");
-      quizScoreListItemEl.textContent =
-        savedScores[i].initials + " - " + savedScores[i].score;
-      quizScoresFormEl.appendChild(quizScoreListItemEl);
-    }
-  })();
+  quizScoresStartButtonEl.addEventListener("click", startUp);
+  quizScoresClearButtonEl.addEventListener("click", clearScores);
 };
 
-loadScores();
+var addScoreList = function () {
+  removeScoreList();
+
+  // get scores from localStorage
+  var savedScores = localStorage.getItem("scoresArr");
+  savedScores = JSON.parse(savedScores);
+
+  // add all the tasks to the ol
+  for (i = 0; i < scoresArr.length; i++) {
+    var quizScoreListItemEl = document.createElement("li");
+    quizScoreListItemEl.className = "recentScores";
+    quizScoreListItemEl.textContent =
+      savedScores[i].initials + " - " + savedScores[i].score;
+    quizScoresListEl.appendChild(quizScoreListItemEl);
+  }
+};
+
+// remove previous lists
+var removeScoreList = function () {
+  while (quizScoresListEl.firstChild) {
+    quizScoresListEl.removeChild(quizScoresListEl.firstChild);
+  }
+};
+
+var clearScores = function () {
+  scoresArr = [];
+  saveScore();
+  removeScoreList();
+};
+
 startUp();
 
 /*
