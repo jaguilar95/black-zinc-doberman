@@ -39,29 +39,62 @@ var quizScoresClearButtonEl = document.createElement("button");
 var timerEl = document.querySelector("#timer-time");
 var quizTime = 60;
 
-// questions Object array declaration
+// questions Object array declaration, taken from W3 schools
 var questionsArr = [
   {
-    question: "What is my favorite color?",
-    alpha: "green",
+    question: "What is HTML?",
+    alpha: "A language for describing web pages",
     aStatus: "correct",
-    beta: "blue",
+    beta: "Everything between the start tag and the end tag, including the tags",
     bStatus: "incorrect",
-    gamma: "yellow",
+    gamma: "The style that you are applying to a selector",
     gStatus: "incorrect",
-    delta: "black",
+    delta: "The way you declare which elements the styles should apply to",
     dStatus: "incorrect",
   },
   {
-    question: "What is my favorite food?",
-    alpha: "tacos",
-    aStatus: "correct",
-    beta: "pizza",
+    question: "Which of these are NOT a CSS selector?",
+    alpha: "Class selector",
+    aStatus: "incorrect",
+    beta: "ID selector",
     bStatus: "incorrect",
-    gamma: "ramen",
-    gStatus: "incorrect",
-    delta: "chicken wings",
+    gamma: "Property selector",
+    gStatus: "correct",
+    delta: "Attribute Selector",
     dStatus: "incorrect",
+  },
+  {
+    question: "What does HTML stand for?",
+    alpha: "Hyperlinks and Text Markup Language",
+    aStatus: "incorrect",
+    beta: "Home Tool Markup Language",
+    bStatus: "incorrect",
+    gamma: "Hungry Tony's Meatball Lasanga",
+    gStatus: "incorrect",
+    delta: "Hyper Text Markup Language",
+    dStatus: "correct",
+  },
+  {
+    question: "What does CSS stand for?",
+    alpha: "Creative Style Sheets",
+    aStatus: "incorrect",
+    beta: "Cascading Style Sheets",
+    bStatus: "correct",
+    gamma: "Computer Style Sheets",
+    gStatus: "incorrect",
+    delta: "Colorful Style Sheets",
+    dStatus: "incorrect",
+  },
+  {
+    question: "How can you add a comment in JavaScript?",
+    alpha: "//This is a comment in JavaScript",
+    aStatus: "correct",
+    beta: "**This is a comment in JavaScript**",
+    bStatus: "incorrect",
+    gamma: "<!--This is a comment in JavaScript-->",
+    gStatus: "incorrect",
+    delta: "'This is a comment in JavaScript'",
+    dStatus: "correct",
   },
 ];
 
@@ -83,15 +116,19 @@ var startUp = function () {
   // add start up elements
   stage.appendChild(startUpEl);
   startUpEl.setAttribute("id", "start-up");
+  startUpEl.className = "row";
 
-  startUpTitleEl.textContent = "Coding Quiz Challenge!";
+  startUpTitleEl.textContent = "Welcome to the Coding Quiz Challenge!";
+  startUpTitleEl.className = "display-5 text-primary";
   startUpEl.appendChild(startUpTitleEl);
 
   startUpTextEl.textContent =
     "Try to answer the following coding-related questions within one minute. Any incorrect answers will lower your time and final score by ten seconds. Good luck!";
+  startUpTextEl.className = "lead";
   startUpEl.appendChild(startUpTextEl);
 
   startButtonEl.textContent = "Start Quiz!";
+  startButtonEl.className = "btn btn-primary";
   startButtonEl.addEventListener("click", startQuiz);
   startUpEl.appendChild(startButtonEl);
 };
@@ -111,13 +148,17 @@ var loadQuestion = function () {
     // append question container
     stage.appendChild(questionEl);
     questionEl.setAttribute("id", "question-container");
+    questionEl.className = "row";
 
     // assign question and append question h3 element
     questionTitleEl.textContent = questionsArr[questionI].question;
+    questionTitleEl.className = "display-6 text-primary";
     questionEl.appendChild(questionTitleEl);
 
     // append ul element
     questionEl.appendChild(questionAnswersEl);
+    questionAnswersEl.className =
+      "list-unstyled border-bottom border-secondary";
 
     // enter answers and append li elements
     answerAlphaEl.textContent = questionsArr[questionI].alpha;
@@ -125,10 +166,14 @@ var loadQuestion = function () {
     answerGammaEl.textContent = questionsArr[questionI].gamma;
     answerDeltaEl.textContent = questionsArr[questionI].delta;
 
-    answerAlphaEl.className = "answer";
-    answerBetaEl.className = "answer";
-    answerGammaEl.className = "answer";
-    answerDeltaEl.className = "answer";
+    answerAlphaEl.className =
+      "answer lead border border-secondary rounded my-3 p-2";
+    answerBetaEl.className =
+      "answer lead border border-secondary rounded my-3 p-2";
+    answerGammaEl.className =
+      "answer lead border border-secondary rounded my-3 p-2";
+    answerDeltaEl.className =
+      "answer lead border border-secondary rounded my-3 p-2";
 
     answerAlphaEl.setAttribute("data-status", questionsArr[questionI].aStatus);
     answerBetaEl.setAttribute("data-status", questionsArr[questionI].bStatus);
@@ -175,9 +220,12 @@ var answerHandler = function (event) {
   ) {
     // show result and load next question
     questionResultEl.textContent = "Correct!";
+    questionResultEl.className = "h2 text-success";
     setTimeout(function () {
       loadQuestion();
-    }, 1000);
+    }, 2000);
+
+    questionEl.removeEventListener("click", answerHandler);
 
     return;
   }
@@ -188,10 +236,14 @@ var answerHandler = function (event) {
   ) {
     // show result, subtract 20 seconds, and load next question
     questionResultEl.textContent = "Incorrect!";
+    questionResultEl.className = "h2 text-danger";
     quizTime -= 10;
     setTimeout(function () {
       loadQuestion();
-    }, 1000);
+    }, 2000);
+
+    questionEl.removeEventListener("click", answerHandler);
+
     return;
   }
 };
@@ -200,18 +252,22 @@ var endQuiz = function () {
   // delete question div and call endQuiz elements
   questionEl.remove();
   clearInterval(quizTimeInterval);
+  endQuizEl.className = "row";
   stage.appendChild(endQuizEl);
 
   endQuizTitleEl.textContent = "Finish!";
+  endQuizTitleEl.className = "display-6 text-primary";
   endQuizEl.appendChild(endQuizTitleEl);
 
   endQuizTextEl.textContent =
     "Your final score is " +
     quizTime +
     ". Enter your initials below and submit your final score to the leader board!";
+  endQuizTextEl.className = "lead";
   endQuizEl.appendChild(endQuizTextEl);
 
   endQuizEl.appendChild(submitFormEl);
+  submitButtonEl.className = "btn btn-primary";
   submitFormEl.appendChild(submitInputEl);
   submitFormEl.appendChild(submitButtonEl);
 
@@ -219,6 +275,7 @@ var endQuiz = function () {
   submitInputEl.setAttribute("name", "initials");
   submitInputEl.setAttribute("placeholder", "Enter Initials");
   submitInputEl.setAttribute("maxlength", "4");
+  submitInputEl.className = "form-control mb-3";
 
   submitButtonEl.innerHTML = "Submit";
   submitFormEl.addEventListener("submit", scoreSubmitHandler);
@@ -273,16 +330,20 @@ var quizScores = function () {
   submitFormEl.reset();
 
   // load quiz score elements
+  quizScoresTitleEl.textContent = "Recent Scores";
+  quizScoresTitleEl.className = "display-6 text-primary";
+  quizScoresStartButtonEl.innerHTML = "Start Again";
+  quizScoresStartButtonEl.className = "btn btn-primary me-4";
+  quizScoresClearButtonEl.innerHTML = "Clear Scores";
+  quizScoresClearButtonEl.className = "btn btn-primary";
+  quizScoresListEl.className = "list-group list-group-numbered my-3";
+
   stage.appendChild(quizScoresEl);
   quizScoresEl.appendChild(quizScoresTitleEl);
   quizScoresEl.appendChild(quizScoresListEl);
   quizScoresEl.appendChild(quizScoresFormEl);
   quizScoresEl.appendChild(quizScoresStartButtonEl);
   quizScoresEl.appendChild(quizScoresClearButtonEl);
-
-  quizScoresTitleEl.textContent = "Recent Scores";
-  quizScoresStartButtonEl.innerHTML = "Start Again";
-  quizScoresClearButtonEl.innerHTML = "Clear Scores";
 
   // adding recent scores as list items
   addScoreList();
@@ -301,7 +362,7 @@ var addScoreList = function () {
   // add all the tasks to the ol
   for (i = 0; i < scoresArr.length; i++) {
     var quizScoreListItemEl = document.createElement("li");
-    quizScoreListItemEl.className = "recentScores";
+    quizScoreListItemEl.className = "list-group-item";
     quizScoreListItemEl.textContent =
       savedScores[i].initials + " - " + savedScores[i].score;
     quizScoresListEl.appendChild(quizScoreListItemEl);
@@ -322,39 +383,3 @@ var clearScores = function () {
 };
 
 startUp();
-
-/*
-
-Array that holds all question objects
-
-Function that loads in starting page element
-* Title
-* Descriptive text
-* Start quiz button that leads to first question 
-
-Start quiz function 
-* Deletes starting page
-* Loads first question
-* Starts timer
-
-Function that loads in a question element
-
-Timer function
-* Starts at 90 sections
-* Counts down one section at a time while not zero
-* If correct answer is selected, run correct answer function
-* If incorrect answer is selected, run incorrect answer function
-* Continue to next question
-
-Correct answer function
-* Highlights answer
-* Displays 'Correct!'
-
-Incorrect answer function
-* Highlights correct answer and flags incorrect answer
-* Penalizes incorrect answers
-
-Function that tracks score in localStorage and displays top scores
-
-
-*/
